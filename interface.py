@@ -45,7 +45,9 @@ class Display:
 
     def __init__(self):
         pygame.init()
+        print("Pygame init")
         info = pygame.display.Info()
+        print(f"Screen is {info.current_w}x{info.current_h}")
         self.screen = pygame.display.set_mode((info.current_w, info.current_h), pygame.FULLSCREEN) if IS_PIE else pygame.display.set_mode((640, 320))
         self.screen_rect = self.screen.get_rect()
         self.large_text_scale = int(self.screen_rect.height*.2)
@@ -234,5 +236,6 @@ def bytes_to_string(count):
     return f'{count:.2g}Tb'
 
 
+print("Running Interface!")
 display = Display()
 display.run_loop()

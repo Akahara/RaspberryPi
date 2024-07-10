@@ -1,0 +1,1 @@
+alias restartcron="sudo rm /var/run/crond.reboot && systemctl restart cron && sleep .5 && sudo journalctl -u cron.service -n 50 -e"
