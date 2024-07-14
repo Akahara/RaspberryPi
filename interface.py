@@ -17,6 +17,10 @@ import time
 
 IS_PIE = 'WONDER_PI' in os.environ
 
+def echo(*args, **kwargs):
+    print(*args, **kwargs, flush=True)
+
+
 class LocalMachine:
     local_ip = None
 
@@ -45,9 +49,9 @@ class Display:
 
     def __init__(self):
         pygame.init()
-        print("Pygame init")
+        echo("Pygame init")
         info = pygame.display.Info()
-        print(f"Screen is {info.current_w}x{info.current_h}")
+        echo(f"Screen is {info.current_w}x{info.current_h}")
         self.screen = pygame.display.set_mode((info.current_w, info.current_h), pygame.FULLSCREEN) if IS_PIE else pygame.display.set_mode((640, 320))
         self.screen_rect = self.screen.get_rect()
         self.large_text_scale = int(self.screen_rect.height*.2)
@@ -82,7 +86,7 @@ class Display:
             frame_funcs[int((ts - Display.boot_time) / Display.INDIVIDUAL_SCREEN_DURATION) % len(frame_funcs)]()
         except Exception as e:
             message = traceback.format_exc() + '\n' + repr(e)
-            print(message, file=sys.stderr)
+            echo(message, file=sys.stderr)
             rect = self.text_rect(message)
             scale = min(self.screen_rect.width / rect.width, self.screen_rect.height / rect.height, 1)
             self.rect(pygame.Rect(0, 0, rect.width*scale + 10, rect.height*scale + 10), (0,0,0,125))
@@ -179,7 +183,7 @@ def frame_system_stats():
     text_size = display.large_text_scale * .3
     display.text(text, (left + margin, margin), size=text_size)
     display.rect((left, 0, 2, display.screen_rect.height))
-    
+
     rect1 = display_bottom_right_time()
 
     pie_size = display.screen_rect.height - 3 * margin - rect1.height
@@ -189,7 +193,7 @@ def frame_system_stats():
     pie_rect.right -= margin
     display.arc(pie_rect.centerx, pie_rect.centery, pie_size/2, disk_usage_frac * math.tau, math.tau, Display.PRIMARY_COLOR)
     display.arc(pie_rect.centerx, pie_rect.centery, pie_size/2, 0, disk_usage_frac * math.tau, Display.DARKER_COLOR)
-    
+
 def frame_photo():
     left = 20
     margin = 20
@@ -236,6 +240,6 @@ def bytes_to_string(count):
     return f'{count:.2g}Tb'
 
 
-print("Running Interface!")
+echo("Running Interface!")
 display = Display()
 display.run_loop()
